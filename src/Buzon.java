@@ -2,74 +2,76 @@ import java.util.ArrayList;
 
 public class Buzon 
 {
-	private static int numProductos=0;
-	private int tamanho;
-	Object lleno,vacio;
+	private ArrayList<Producto> productos;
+	private int productosA;
+	private int productosB;
+	private int capacidad;
 	
-	public Buzon(int n)
+	public Buzon(int pCapacidad)
 	{
-		tamanho=n;
-		lleno= new Object();
-		vacio= new Object();
+		productos=new ArrayList<Producto>();
+		productosA=0;
+		productosB=0;
+		capacidad=pCapacidad;
 	}
 	
-	public void almacenar(int x) throws InterruptedException
+	public boolean insertar(Producto p)
 	{
-		boolean continuar=true;
-		while(continuar)
+		boolean rta=false;
+		if(productos.size()<capacidad)
 		{
-			//(x+numProductos)>=tamanho
-			synchronized(this)
+			rta=true;
+			productos.add(p);
+			if(p.getTipo())
 			{
-				if((x+numProductos)<=tamanho)
-				{
-					numProductos+=x;
-					continuar=false;
-				}
+				productosA++;
 			}
-			if(continuar)
+			else
 			{
-				synchronized(lleno)
-				{
-					lleno.wait();				
-				}
+				productosB++;
 			}
-			
-		}
-		
-		synchronized(vacio)
-		{
-			vacio.notify();
-		}
-	}
-	
-	public int retirar(int y) throws InterruptedException
-	{
-		boolean continuar=true;
-		int rta=0;
-		while(continuar)
-		{
-			synchronized(this)
-			{
-				if((numProductos-y)>=0)
-				{
-					rta=y;
-					numProductos-=y;
-					continuar=false;
-				}
-			}
-			if(continuar)
-			{
-				synchronized(vacio)
-				{
-					vacio.wait();				
-				}
-			}
-		}
-		synchronized(lleno)
-		{
-			lleno.notify();			
 		}
 		return rta;
 	}
+	
+	public Producto retirar()
+	{
+		return productos.remove(0);
+	}
+	
+	public Producto retirar(boolean tipoA)
+	{
+		Producto rta=null;
+		if(tipoA&&productosA>0)
+		{
+			boolean centinela=false;
+			for (int i = 0; i < productos.size() && !centinela ; i++) 
+			{
+				if(productos.get(i).getTipo())
+				{
+					productosA--;
+					centinela=true;
+					rta=productos.remove(i);
+				}
+			}
+		}
+		else if(!tipoA&&productosB>0)
+		{
+			boolean centinela=false;
+			for (int i = 0; i < productos.size() && !centinela ; i++) 
+			{
+				if(!productos.get(i).getTipo())
+				{
+					productosB--;
+					centinela=true;
+					rta=productos.remove(i);
+				}
+			}
+		}
+		return rta;
+	}
+	
+	
+	
 }
+
