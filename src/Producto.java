@@ -5,6 +5,7 @@ public class Producto
 	private static int cont=0;
 	private boolean tipoA;
 	private int id;
+	private static Object asignado = new Object();
 	
 	public Producto(boolean pTipo)
 	{
@@ -12,9 +13,12 @@ public class Producto
 		id=asignarId();
 	}
 	
-	public synchronized int asignarId()
+	public int asignarId()
 	{
-		return cont++;
+		synchronized(asignado){
+			return cont++;
+		}
+		
 	}
 	
 	public boolean getTipo()
@@ -22,4 +26,8 @@ public class Producto
 		return tipoA;
 	}
 	
+	public int getId()
+	{
+		return id;
+	}
 }

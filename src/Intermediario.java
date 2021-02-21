@@ -5,24 +5,32 @@ public class Intermediario extends Thread
 	private Buzon buz2;
 	Object lleno,vacio;
 	private int totalProductos;
+	private int id;
 
 	public void run()
 	{	
 		Producto movido = retirar();
-		while(movido!=null&&totalProductos>0)
-		{
-			almacenar(movido);
+		while(totalProductos>0)
+		{	
+			System.out.println("Inter1");
+
+			if(movido!=null)
+			{
+				almacenar(movido);
+				totalProductos--;
+			}
 			movido = retirar();
 		}
 	}
-	
-	public Intermediario(Buzon pB1, Buzon pB2, int total)
+
+	public Intermediario(Buzon pB1, Buzon pB2, int total, int pId)
 	{
 		totalProductos=total;
 		buz1=pB1;
 		buz2=pB2;
 		lleno=new Object();
 		vacio= new Object();
+		id= pId;
 	}
 
 	public void almacenar(Producto p)
@@ -30,9 +38,12 @@ public class Intermediario extends Thread
 		boolean continuar = true ;
 		while (continuar)
 		{
+			System.out.println("Inter2");
 			synchronized (this) 
 			{
-				if (buz2.insertar(p)) 
+				boolean inserto = buz2.insertar(p);
+				System.out.println(inserto);
+				if (inserto) 
 				{
 					continuar= false ;
 				}
@@ -55,7 +66,9 @@ public class Intermediario extends Thread
 			{ 
 				vacio.notify () ; 
 			}
-			catch (Exception e) {}
+			catch (Exception e) {}		
+			System.out.println("Intermediario: "+id+ " almaceno producto: "+ p.getId());
+
 		}
 	}
 
@@ -65,6 +78,7 @@ public class Intermediario extends Thread
 		Producto rta = null ;
 		while (continuar&&totalProductos>0) 
 		{
+			System.out.println("Inter3");
 			synchronized (this)
 			{
 				rta=buz1.retirar();

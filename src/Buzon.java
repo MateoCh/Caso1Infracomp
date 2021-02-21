@@ -36,7 +36,19 @@ public class Buzon
 	
 	public Producto retirar()
 	{
-		return productos.remove(0);
+		if(!productos.isEmpty())
+		{
+			Producto actual = productos.remove(0);
+			if(actual.getTipo())
+				productosA--;
+			else
+				productosB--;
+			
+			return actual;
+		}
+			
+		else
+			return null;
 	}
 	
 	public Producto retirar(boolean tipoA)

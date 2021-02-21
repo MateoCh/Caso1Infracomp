@@ -27,12 +27,12 @@ public class Principal
 			buzCons=new Buzon(buzonesCons);
 			for (int i = 0; i < numProdCons; i++) 
 			{
-				new ProductorThread(numProductos, buzProd, i%2==0).start();
-				new ConsumidorThread(numProductos, buzCons, i%2==0).start();		
+				new ProductorThread(numProductos, buzProd, i%2==0, i).start();
+				new ConsumidorThread(numProductos, buzCons, i%2==0, i).start();		
 			}
 			int total= numProdCons*numProductos;
-			new Intermediario(buzProd, buzInter, total).start();
-			new Intermediario(buzInter, buzCons, total).start();
+			new Intermediario(buzProd, buzInter, total,1).start();
+			new Intermediario(buzInter, buzCons, total,2).start();
 			
 		}
 		catch (Exception e) 
@@ -66,7 +66,6 @@ public class Principal
 			numProductos=Integer.parseInt(datos.getProperty( "concurrencia.numProductos"));
 			buzonesProd=Integer.parseInt(datos.getProperty( "concurrencia.buzonesProd"));
 			buzonesCons=Integer.parseInt(datos.getProperty( "concurrencia.buzonesCons"));
-			
 		}
 		catch(Exception e)
 		{
