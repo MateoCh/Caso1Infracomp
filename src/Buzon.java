@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Buzon 
 {
@@ -30,6 +31,7 @@ public class Buzon
 			{
 				productosB++;
 			}
+//			imprimirBuzon(true);
 		}
 		return rta;
 	}
@@ -44,6 +46,7 @@ public class Buzon
 			else
 				productosB--;
 			
+//			imprimirBuzon(false);
 			return actual;
 		}
 			
@@ -66,6 +69,7 @@ public class Buzon
 					rta=productos.remove(i);
 				}
 			}
+//			imprimirBuzon(false);
 		}
 		else if(!tipoA&&productosB>0)
 		{
@@ -79,8 +83,33 @@ public class Buzon
 					rta=productos.remove(i);
 				}
 			}
+//			imprimirBuzon(false);
 		}
 		return rta;
+	}
+	
+	private void imprimirBuzon(boolean insertando)
+	{
+		if(insertando)
+		{
+			String msg="insertando: |";
+			for (int i = 0; i < productos.size(); i++) 
+			{
+				String act=productos.get(i).getId()+"";
+				msg+= act +"|";
+			}
+			System.out.println(msg);
+		}
+		else
+		{
+			String msg="retirando: |";
+			for (int i = 0; i < productos.size(); i++) 
+			{
+				String act=productos.get(i).getId()+"";
+				msg+= act +"|";
+			}
+			System.out.println(msg);
+		}
 	}
 	
 	

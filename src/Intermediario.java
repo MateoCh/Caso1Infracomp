@@ -12,7 +12,7 @@ public class Intermediario extends Thread
 		Producto movido = retirar();
 		while(totalProductos>0)
 		{	
-			System.out.println("Inter1");
+//			System.out.println("Inter1");
 
 			if(movido!=null)
 			{
@@ -28,8 +28,8 @@ public class Intermediario extends Thread
 		totalProductos=total;
 		buz1=pB1;
 		buz2=pB2;
-		lleno=new Object();
-		vacio= new Object();
+//		lleno=new Object();
+//		vacio= new Object();
 		id= pId;
 	}
 
@@ -38,11 +38,11 @@ public class Intermediario extends Thread
 		boolean continuar = true ;
 		while (continuar)
 		{
-			System.out.println("Inter2");
-			synchronized (this) 
+//			System.out.println("Inter2");
+			synchronized (buz2) 
 			{
 				boolean inserto = buz2.insertar(p);
-				System.out.println(inserto);
+//				System.out.println(inserto);
 				if (inserto) 
 				{
 					continuar= false ;
@@ -50,23 +50,23 @@ public class Intermediario extends Thread
 			}
 			if (continuar)
 			{
-				synchronized (lleno) 
+				synchronized (buz2) 
 				{
 					try
 					{ 
-						lleno.wait () ; 
+						buz2.wait () ; 
 					}
-					catch (Exception e) { }
+					catch (Exception e) { e.printStackTrace();}
 				}
 			}
 		}
-		synchronized (vacio) 
+		synchronized (buz1) 
 		{
 			try
 			{ 
-				vacio.notify () ; 
+				buz1.notify () ; 
 			}
-			catch (Exception e) {}		
+			catch (Exception e) {e.printStackTrace();}		
 			System.out.println("Intermediario: "+id+ " almaceno producto: "+ p.getId());
 
 		}
@@ -78,8 +78,8 @@ public class Intermediario extends Thread
 		Producto rta = null ;
 		while (continuar&&totalProductos>0) 
 		{
-			System.out.println("Inter3");
-			synchronized (this)
+//			System.out.println("Inter3");
+			synchronized (buz1)
 			{
 				rta=buz1.retirar();
 				if (rta!=null)
@@ -89,23 +89,23 @@ public class Intermediario extends Thread
 			}
 			if (continuar)
 			{
-				synchronized (vacio) 
+				synchronized (buz1) 
 				{
 					try
 					{ 
-						vacio.wait () ; 
+						buz1.wait () ; 
 					}
-					catch (Exception e) { }
+					catch (Exception e) {e.printStackTrace(); }
 				}
 			}
 		}
-		synchronized (lleno) 
+		synchronized (buz2) 
 		{
 			try
 			{ 
-				lleno.notify () ; 
+				buz2.notify () ; 
 			}
-			catch (Exception e) { }
+			catch (Exception e) { e.printStackTrace();}
 		}
 		return rta;
 	}

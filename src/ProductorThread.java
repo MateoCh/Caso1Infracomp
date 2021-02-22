@@ -25,14 +25,15 @@ public class ProductorThread extends Thread
 			//System.out.println("Productor");
 
 			Producto creado = new Producto(tipoA);
-				while(!buz.insertar(creado) && (MAX_PRODUCTOS-productos.size())>0)
-				{
-					//System.out.println("Productor2");
-
-					yield();
-				}
-			
-
+			while(!buz.insertar(creado) && (MAX_PRODUCTOS-productos.size())>0)
+			{
+				//System.out.println("Productor2");
+				yield();
+			}
+			synchronized(buz)
+			{
+				buz.notify();				
+			}
 			productos.add(creado);	
 			synchronized(salida) {
 				System.out.println("Productor: " + id + " de tipo: " + (tipoA? "A":"B") + " creo producto: " + creado.getId() + " de tipo: " + (creado.getTipo()? "A":"B"));

@@ -23,19 +23,22 @@ public class ConsumidorThread extends Thread
 		while((MAX_PRODUCTOS-productos.size())>0)
 		{
 			//System.out.println("Consumidor");
-			synchronized(salida)
-			{
+//			synchronized(salida)
+//			{
 				Producto retirado=buz.retirar(tipoA);
 				while(retirado==null && (MAX_PRODUCTOS-productos.size())>0)
 				{
 					//System.out.println("Consumidor2");
-
 					yield();
 					retirado=buz.retirar(tipoA);
-				}	
+				}
+				synchronized(buz)
+				{
+					buz.notify();
+				}
 				productos.add(retirado);
 				System.out.println("Consumidor: " + id + " de tipo: " + (tipoA? "A":"B") + " consumio producto: " + retirado.getId()+ " de tipo: " + (retirado.getTipo()? "A":"B"));
-			}
+			
 
 		}
 	}
