@@ -26,7 +26,7 @@ public class ConsumidorThread extends Thread
 //			synchronized(salida)
 //			{
 				Producto retirado=buz.retirar(tipoA);
-				while(retirado==null && (MAX_PRODUCTOS-productos.size())>0)
+				while(retirado==null)
 				{
 					//System.out.println("Consumidor2");
 					yield();

@@ -16,7 +16,7 @@ public class Producto
 	public int asignarId()
 	{
 		synchronized(asignado){
-			return cont++;
+			return ++cont;
 		}
 		
 	}

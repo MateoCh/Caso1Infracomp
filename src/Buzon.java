@@ -16,7 +16,7 @@ public class Buzon
 		capacidad=pCapacidad;
 	}
 	
-	public boolean insertar(Producto p)
+	public synchronized boolean insertar(Producto p)
 	{
 		boolean rta=false;
 		if(productos.size()<capacidad)
@@ -36,7 +36,7 @@ public class Buzon
 		return rta;
 	}
 	
-	public Producto retirar()
+	public synchronized Producto retirar()
 	{
 		if(!productos.isEmpty())
 		{
@@ -54,7 +54,7 @@ public class Buzon
 			return null;
 	}
 	
-	public Producto retirar(boolean tipoA)
+	public synchronized Producto retirar(boolean tipoA)
 	{
 		Producto rta=null;
 		if(tipoA&&productosA>0)
